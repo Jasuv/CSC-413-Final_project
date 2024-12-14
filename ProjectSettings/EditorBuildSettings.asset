@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Base.unity
     guid: 6f3558e95fca451418e7301b2da243dd
   - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: 98e25faf12aa18c46be54eeb66ab6941
+  - enabled: 1
     path: Assets/Scenes/Ocean.unity
     guid: d8a0f8e6724e68643b5c45f1e040aabd
   m_configObjects: {}

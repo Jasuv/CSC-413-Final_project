@@ -47,9 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grassPad: {fileID: 3493078946846206233, guid: ca2d5b2152a19d14cb83bfb76afa918c, type: 3}
   plantType: {fileID: 834918253823411206, guid: 74cca748d23e53b41b277bd6b9490e4f, type: 3}
-  cost: 1
-  growTime: 120
-  generatePoints: 5
+  cost: 2
+  growTime: 180
+  generatePoints: 6
 --- !u!135 &7555400475914864100
 SphereCollider:
   m_ObjectHideFlags: 0

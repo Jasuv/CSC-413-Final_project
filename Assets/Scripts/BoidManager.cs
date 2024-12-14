@@ -28,10 +28,10 @@ public class BoidManager : MonoBehaviour
     public ComputeShader boidMath;
     public bool debug;
 
+    // shader info
     private int threadGroups;
     private BoidData[] boidData;
     private ComputeBuffer boidBuffer;
-    private LayerMask terrain;
 
     // vectors
     private Vector3 separationVec;
@@ -40,6 +40,7 @@ public class BoidManager : MonoBehaviour
     private Vector3 obstacleVec;
     private Vector3 targetVec;
 
+    private LayerMask terrain;
     private bool updating;
 
     private void Awake()
@@ -52,13 +53,20 @@ public class BoidManager : MonoBehaviour
     {
         threadGroups = Mathf.CeilToInt(Stats.population / 1024f);
         terrain = LayerMask.GetMask("terrain");
-        if (debug) SpawnBoids(2000);
+        if (debug) SpawnBoids(2000); // debug room
     }
 
     public void SpawnBoids(int num)
     {
         if (Stats.points < 30) return;
         Stats.points -= 30;
+
+        // sound effect
+        CameraController player = GameObject.Find("Main Camera").GetComponent<CameraController>();
+        player.Play(player.soundEffects[0]);
+        // particle effect
+        transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+
         for (int i = 0; i < num; i++)
         {
             Boid boid = Instantiate(boidObject, transform.position, transform.rotation).GetComponent<Boid>();
@@ -103,9 +111,9 @@ public class BoidManager : MonoBehaviour
 
                 if (debug)
                 {
-                    Debug.DrawRay(boid.pos, separationVec.normalized, Color.green);   // Separation force
-                    Debug.DrawRay(boid.pos, alignmentVec.normalized, Color.cyan);     // Alignment force
-                    Debug.DrawRay(boid.pos, cohesionVec.normalized, Color.magenta);   // Cohesion force
+                    Debug.DrawRay(boid.pos, separationVec.normalized, Color.green);
+                    Debug.DrawRay(boid.pos, alignmentVec.normalized, Color.cyan);
+                    Debug.DrawRay(boid.pos, cohesionVec.normalized, Color.magenta);
                 }
 
                 // check for obstacles
@@ -133,6 +141,7 @@ public class BoidManager : MonoBehaviour
     {
         updating = true;
 
+        // reset buffer
         if (boidBuffer != null)
         {
             boidBuffer.Release();
@@ -142,6 +151,8 @@ public class BoidManager : MonoBehaviour
         if (Stats.population > 0)
         {
             boidData = new BoidData[Stats.population];
+
+            // setup boidData to pass to GPU
             for (int i = 0; i < Stats.population; i++)
             {
                 boidData[i].pos = Boids[i].pos;
@@ -151,6 +162,7 @@ public class BoidManager : MonoBehaviour
                 boidData[i].power = Boids[i].genes.power;
             }
 
+            // setup buffer
             threadGroups = Mathf.CeilToInt(Stats.population / 1024f);
             boidBuffer = new ComputeBuffer(Stats.population, sizeof(float) * 17 + sizeof(int) * 1);
             boidBuffer.SetData(boidData);
@@ -175,6 +187,7 @@ public class BoidManager : MonoBehaviour
             (-boid.transform.up + boid.transform.forward).normalized
         };
 
+        // check directions and add opposing force
         foreach (Vector3 dir in dirs)
         {
             if (Physics.Raycast(boid.pos, dir, out hit, boid.genes.vision, terrain))
@@ -211,7 +224,7 @@ public class BoidManager : MonoBehaviour
         updateBuffer();
     }
 
-    // weird fix
+    // fix for buffer error when scene reloading
     private void OnDestroy()
     {
         if (boidBuffer != null)

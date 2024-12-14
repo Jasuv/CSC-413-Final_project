@@ -31,11 +31,13 @@ public class Genes
             cohesionWeight = this.cohesionWeight
         };
 
+        // random mutation
         if (Random.value < Stats._MUTATION_CHANCE)
         {
             Mutate(child, Stats._MUTATION_FACTOR * Random.Range(0.8f, 1.2f));
         }
 
+        // deviation check for new species
         if (DeviationCheck(child)) 
         {
             child.species = Stats.NewID();
@@ -46,6 +48,7 @@ public class Genes
         return child;
     }
 
+    // chooses a random stat to change by a factor
     private void Mutate(Genes gene, float factor)
     {
         int stat = Random.Range(0, 6);
@@ -78,6 +81,7 @@ public class Genes
         }
     }
 
+    // compares to ancestor gene
     private bool DeviationCheck(Genes child) 
     {
         float visionDiff = Mathf.Abs(child.ancestor.vision - child.vision);

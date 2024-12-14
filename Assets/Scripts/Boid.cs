@@ -25,6 +25,8 @@ public class Boid : MonoBehaviour
         age = 0;
         transform.localScale = new Vector3(genes.power, genes.power, genes.power);
         transform.GetChild(0).GetComponent<MeshRenderer>().material.color = genes.color;
+
+        // makes sure rigidbody doesn't affect boid
         GetComponent<Rigidbody>().isKinematic = true;
     }
 
@@ -42,17 +44,20 @@ public class Boid : MonoBehaviour
             transform.position = new Vector3(125, 125, 125);
         }
 
-        age += Stats._SIMULATION_TIME * 10;
+        age += Stats._SIMULATION_TIME * 2;
         energy += Stats.foodAmount / Stats.population * Stats._SIMULATION_TIME;
         float multiplier = 1 + (float)(0.7 * genes.power + 0.3 * genes.speed) / 10;
         energy -= Stats.population / (Stats.foodAmount + 0.001f) * multiplier * Stats._ENERGY_DRAIN * Stats._SIMULATION_TIME;
         energy = Mathf.Clamp(energy, 0, 100);
 
+        // reproduction
         if ((energy > 60) && (age > (genes.maturity + genes.maturity * Random.Range(0f, 1f))))
         {
             Reproduce();
             energy -= 60;
         }
+
+        // death
         if ((energy <= 0) || (age >= 100 * Random.Range(0.8f, 1.2f))) Die();
     }
 
@@ -70,11 +75,9 @@ public class Boid : MonoBehaviour
         manager.removeBoid(this);
     }
 
+    // out-of-bounds boids die
     public void OnTriggerEnter(Collider col)
     {
-        if (col.CompareTag("kill_box"))
-        {
-            manager.removeBoid(this.GetComponent<Boid>());
-        }
+        if (col.CompareTag("kill_box")) Die();
     }
 }
