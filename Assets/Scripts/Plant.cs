@@ -6,7 +6,6 @@ public class Plant : MonoBehaviour
     public GameObject grassPad;
     public GameObject plantType;
     public int cost;
-
     public float growTime;
     public int generatePoints;
 

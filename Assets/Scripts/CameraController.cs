@@ -12,17 +12,16 @@ public class CameraController : MonoBehaviour
     public float sensitivity;
     public GameObject[] seeds;
 
+    public AudioSource soundBoard;
+    public AudioClip[] soundEffects;
+    public AudioSource musicPlayer;
+    public AudioClip[] songs;
+
     private bool follow = false;
     private Boid boidDisplay;
     private float speed;
     private float pitch, yaw;
     private Vector3 pos;
-
-    public AudioSource soundBoard;
-    public AudioClip[] soundEffects;
-
-    public AudioSource musicPlayer;
-    public AudioClip[] songs;
 
     private void Awake()
     {
@@ -38,7 +37,7 @@ public class CameraController : MonoBehaviour
         StartCoroutine(PlayMusic());
     }
 
-    void Update()
+    private void Update()
     {
         // rotate camera
         if (Input.GetKey(KeyCode.Mouse1))

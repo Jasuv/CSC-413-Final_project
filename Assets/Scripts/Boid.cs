@@ -30,7 +30,7 @@ public class Boid : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
     }
 
-    public void Update()
+    private void Update()
     {
         try
         {

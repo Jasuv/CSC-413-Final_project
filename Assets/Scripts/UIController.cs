@@ -23,7 +23,7 @@ public class UIController : MonoBehaviour
         buttons[1].GetComponent<Image>().color = new Color(0, 0, 0, 0);
     }
 
-    void Update()
+    private void Update()
     {
         // enable/disable GUI
         if (Input.GetKeyDown(KeyCode.P)) 
